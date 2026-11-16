@@ -54,7 +54,7 @@ version (IN_LLVM)
     extern (C++) void deleteIrDsymbol(void*) nothrow;
 }
 
-/***************************************
+/**
  * Calls dg(Dsymbol* sym) for each Dsymbol.
  * If dg returns !=0, stops and returns that value else returns 0.
  * Params:
@@ -83,7 +83,7 @@ int foreachDsymbol(Dsymbols* symbols, scope int delegate(Dsymbol) dg)
     return 0;
 }
 
-/***************************************
+/**
  * Calls dg(Dsymbol* sym) for each Dsymbol.
  * Params:
  *    symbols = Dsymbols
@@ -161,10 +161,12 @@ extern (C++) private class AddCommentVisitor: Visitor
     override void visit(StaticForeachDeclaration sfd) {}
 }
 
-
+/**
+ * Defines the visibility of a user defined symbol.
+ */
 struct Visibility
 {
-    ///
+    /// Defines visibility kind by keyword
     enum Kind : ubyte
     {
         undefined,
@@ -176,8 +178,8 @@ struct Visibility
         export_,
     }
 
-    Kind kind;
-    Package pkg;
+    Kind kind;          /// The visibility keyword.
+    Package pkg;        /// The package identifier of the visibility, null for all non-package level visibility.
 
     extern(C++) this(Visibility.Kind kind, Package pkg = null) pure nothrow @nogc @safe
     {
@@ -368,7 +370,8 @@ enum DSYM : ubyte
     cAsmDeclaration
 }
 
-/***********************************************************
+/**
+ *
  */
 extern (C++) class Dsymbol : ASTNode
 {

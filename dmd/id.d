@@ -614,7 +614,7 @@ immutable Msgtable[] msgtable =
 ];
 
 
-/*
+/**
  * Tuple of DMD source code identifier and symbol in the D executable.
  *
  * The first element of the tuple is the identifier to use in the DMD source
@@ -624,13 +624,14 @@ immutable Msgtable[] msgtable =
  */
 struct Msgtable
 {
-    // The identifier to use in the DMD source.
+    /// The identifier to use in the DMD source.
     string ident;
 
-    // The name to use in the D executable
+    /// The name to use in the D executable
     private string name_;
 
-    /*
+    /**
+     * Gets the name of the identifier.
      * Returns: the name to use in the D executable, `name_` if non-empty,
      *  otherwise `ident`
      */
@@ -640,10 +641,14 @@ struct Msgtable
     }
 }
 
-/*
+/**
  * Iterates the given Msgtable array, passes each element to the given lambda
  * and accumulates a string from each return value of calling the lambda.
  * Appends a newline character after each call to the lambda.
+ * Params:
+ *   msgtable = The message table used as the source
+ *   dg = The function used for generating each line of code.
+ * Returns: The generated code, complete with line terminating characters.
  */
 string generate(immutable(Msgtable)[] msgtable, string function(Msgtable) dg)
 {
@@ -660,19 +665,30 @@ string generate(immutable(Msgtable)[] msgtable, string function(Msgtable) dg)
     return code;
 }
 
-// Used to generate the code for each identifier.
+/**
+ * Used to generate the code for each identifier.
+ * Params:
+ *   m = The message table item
+ * Returns: The generated identifier declaration.
+ */
 string identifier(Msgtable m) @safe
 {
     return "Identifier " ~ m.ident ~ ";";
 }
 
-// Used to generate the code for each initializer.
+/// Used to generate the code for each initializer.
+/// Params:
+///   m = The message table item
+/// Returns: The initializer code generated for the the message table item
 string initializer(Msgtable m) @safe
 {
     return m.ident ~ ` = Identifier.idPool("` ~ m.name ~ `");`;
 }
 
-// Used to generate the code for each deinitializer.
+/// Used to generate the code for each deinitializer.
+/// Params:
+///   m = The message table item
+/// Returns: The deinitializer code generated fot the message table item
 string deinitializer(Msgtable m) @safe
 {
     return m.ident ~ " = Identifier.init;";
